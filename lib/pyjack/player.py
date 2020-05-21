@@ -1,6 +1,6 @@
 import json
 
-from lib.shoe import Shoe, Card, Rank, Suit
+from lib.pyjack.shoe import Shoe, Card, Rank, Suit
 
 
 
@@ -15,7 +15,7 @@ class Player:
         self.type = 'human' # player type. will allow for ai types later
         self.payroll = payroll # player's remaining money 
         self.wager = 0  # player's wager for current hand
-        with open('lib/human.json') as f:   
+        with open('lib/pyjack/human.json') as f:   
             self.moves = json.load(f)       
 
     def hand_value(self, hand=None):
@@ -118,6 +118,11 @@ class Player:
         return False 
 
     def __pull_aces(self, hand=None):
+        """
+        Takes the aces out of a hand and returns the aceless hand
+        :param hand: hand of cards
+        :return: a hand of cards without aces
+        """
         if hand is None:
             hand = self.hand
         no_aces = []
@@ -128,6 +133,10 @@ class Player:
 
 
     def __get_aces(self):
+        """
+        counts the aces in a hand
+        :return: number of aces in hand
+        """
         hand_s = sorted(self.hand)
         ace_count = 0
         for card in hand_s:

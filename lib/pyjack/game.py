@@ -1,7 +1,7 @@
 import pandas as pd
 
-from lib.shoe import Shoe, Card, Rank, Suit
-from lib.player import Player
+from lib.pyjack.shoe import Shoe, Card, Rank, Suit
+from lib.pyjack.player import Player
 
 class BlackJackTable:
     def __init__(self, hands=1, decks=6, player_count=4):
@@ -19,8 +19,6 @@ class BlackJackTable:
     
     def run(self):
         while self.hands_played < self.hands_to_play:
-            # print()
-            # print()
             self.play_hand()
             # self.output_table_status()
 
@@ -33,12 +31,14 @@ class BlackJackTable:
         dealer_card = self.dealer.hand[0] 
 
         # data collection
+        # --------------------------------------
         self.df.loc[hand, 'dealer_card'] = dealer_card.char_rep()
         self.df.loc[hand, 'dealer_hand'] = self.dealer.hand_value()
-
         for i in range(len(self.players)):
             self.df.loc[hand, f'hand_{i}'] = self.players[i].hand_str()
+        # --------------------------------------
 
+        # handle dealer blackjack
         if self.dealer.hand_value() == 21:
             # print(f'DEALER BLACKJACK!!!')
             for player in self.players:
@@ -49,17 +49,22 @@ class BlackJackTable:
             for i in range(len(self.players)):
                 player = self.players[i]
                 
+                # check if player is playing
+                if player.wager == 0:
+                    continue
+
                 # data collection
                 self.df.loc[hand, f'init_move_{i}'] = player.play(self.shoe, dealer_card)
 
                 # first check for blackjack
-                if player.play(self.shoe, self.dealer.hand[0]) == "BLACKJACK":
+                if player.play(self.shoe, dealer_card) == "BLACKJACK":
                     player.pay(player.wager * 2.5)
+                
                 # then play hand
-                while player.play(self.shoe, self.dealer.hand[0]) not in ["BUST", "S", "P", "BLACKJACK"]:
-                    if player.play(self.shoe, self.dealer.hand[0]) == "H":
+                while player.play(self.shoe, dealer_card) not in ["BUST", "S", "P", "BLACKJACK"]:
+                    if player.play(self.shoe, dealer_card) == "H":
                         player.hand.append(self.shoe.deal())
-                    elif player.play(self.shoe, self.dealer.hand[0]) == "D":
+                    elif player.play(self.shoe, dealer_card) == "D":
                         player.hand.append(self.shoe.deal())
                         if player.payroll >= player.wager:
                             player.payroll -= player.wager
@@ -106,10 +111,12 @@ class BlackJackTable:
         self.shoe.burn()
         self.dealer.hand.append(self.shoe.deal())
         for player in self.players:
-            player.hand.append(self.shoe.deal())
+            if player.wager != 0:
+                player.hand.append(self.shoe.deal())
         self.dealer.hand.append(self.shoe.deal())
         for player in self.players:
-            player.hand.append(self.shoe.deal())
+            if player.wager != 0:
+                player.hand.append(self.shoe.deal())
     
     def clear_table(self):
         self.dealer.hand = []
