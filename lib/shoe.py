@@ -34,6 +34,116 @@ class Card:
     def get_rank(self):
         return self.rank
 
+    def char_rep(self):
+        if self.rank == Rank.ace:
+            return "A"
+        elif self.rank == Rank.two:
+            return "2"
+        elif self.rank == Rank.three:
+            return "3"
+        elif self.rank == Rank.four:
+            return "4"
+        elif self.rank == Rank.five:
+            return "5"
+        elif self.rank == Rank.six:
+            return "6"
+        elif self.rank == Rank.seven:
+            return "7"
+        elif self.rank == Rank.eight:
+            return "8"
+        elif self.rank == Rank.nine:
+            return "9"
+        elif self.rank == Rank.ten:
+            return "T"
+        elif self.rank == Rank.jack:
+            return "J"
+        elif self.rank == Rank.queen:
+            return "Q"
+        elif self.rank == Rank.king:
+            return "K"    
+        else:
+            return "?"
+
+    def value(self, aces_high=True):
+        if self.rank == Rank.ace:
+            if aces_high:
+                return 11
+            else:
+                return 1
+        elif self.rank == Rank.two:
+            return 2
+        elif self.rank == Rank.three:
+            return 3
+        elif self.rank == Rank.four:
+            return 4
+        elif self.rank == Rank.five:
+            return 5
+        elif self.rank == Rank.six:
+            return 6
+        elif self.rank == Rank.seven:
+            return 7
+        elif self.rank == Rank.eight:
+            return 8
+        elif self.rank == Rank.nine:
+            return 9
+        elif self.rank == Rank.ten or self.rank == Rank.jack:
+            return 10
+        elif self.rank == Rank.queen or self.rank == Rank.king:
+            return 10
+        else:
+            return -999
+
+    def __cmp_value(self):
+        if self.rank == Rank.ace:
+            return 1
+        elif self.rank == Rank.two:
+            return 2
+        elif self.rank == Rank.three:
+            return 3
+        elif self.rank == Rank.four:
+            return 4
+        elif self.rank == Rank.five:
+            return 5
+        elif self.rank == Rank.six:
+            return 6
+        elif self.rank == Rank.seven:
+            return 7
+        elif self.rank == Rank.eight:
+            return 8
+        elif self.rank == Rank.nine:
+            return 9
+        elif self.rank == Rank.ten:
+            return 10
+        elif self.rank == Rank.jack:
+            return 11
+        elif self.rank == Rank.queen:
+            return 12
+        elif self.rank == Rank.king:
+            return 13    
+        else:
+            return 99
+
+    def __cmp__(self, other):
+        return cmp(self.__cmp_value(), other.__cmp_value())
+
+    def __lt__(self, other):
+        return self.__cmp_value() < other.__cmp_value()
+
+    def __le__(self, other):
+        return self.__cmp_value() <= other.__cmp_value()
+    
+    def __eq__(self, other):
+        return self.__cmp_value() == other.__cmp_value()
+    
+    def __ne__(self, other):
+        return self.__cmp_value() != other.__cmp_value()
+    
+    def __ge__(self, other):
+        return self.__cmp_value() >= other.__cmp_value()
+    
+    def __gt__(self, other):
+        return self.__cmp_value() >= other.__cmp_value()
+    
     def __str__(self):
         return f'{self.suit} {self.rank}'
 
@@ -52,7 +162,7 @@ class Shoe:
 
     def burn(self):
         card = self.cards.pop(0)
-        self.discard_hidden = card
+        self.discard_hidden.append(card)
 
     def shuffle(self):
         random.shuffle(self.cards)
@@ -88,5 +198,25 @@ if __name__ == "__main__":
     print(f'{shoe.deal()}')
     print(f'{shoe.deal()}')
     print(f'{shoe.deal()}')
-    print(f'{shoe.deal()}')
+    print(f'{shoe.deal().char_rep()}')
     print(f'{shoe}')
+
+
+    hand = []
+    
+    
+    
+    for i in range(7):
+        hand.append(shoe.deal())
+    
+    s = ""
+    for card in hand:
+        s += f'{card} |'
+    print(s)
+    
+    hand = sorted(hand)
+
+    s = ""
+    for card in hand:
+        s += f'{card} |'
+    print(s)
