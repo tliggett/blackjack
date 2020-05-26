@@ -20,3 +20,11 @@ pipenv shell
 pipenv install
 jupyter-notebook
 ```
+
+### To update pyjack21
+
+pyjack21 is still in its alpha phase, so it is important to have the latest version of the package
+
+```
+pipenv update pyjack21
+```

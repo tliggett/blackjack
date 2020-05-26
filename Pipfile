@@ -7,7 +7,7 @@ name = "pypi"
 pandas = "*"
 jupyterlab = "*"
 matplotlib = "*"
-pyjack21 = ">=0.1.8"
+pyjack21 = "*"
 
 [dev-packages]
 
